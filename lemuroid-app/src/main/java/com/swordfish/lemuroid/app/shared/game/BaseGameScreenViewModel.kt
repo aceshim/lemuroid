@@ -13,6 +13,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.swordfish.lemuroid.app.mobile.feature.game.GameService
 import com.swordfish.lemuroid.app.mobile.feature.settings.SettingsManager
+import com.swordfish.lemuroid.app.shared.game.viewmodel.GameViewModelCheats
 import com.swordfish.lemuroid.app.shared.game.viewmodel.GameViewModelInput
 import com.swordfish.lemuroid.app.shared.game.viewmodel.GameViewModelRetroGameView
 import com.swordfish.lemuroid.app.shared.game.viewmodel.GameViewModelSaves
@@ -24,6 +25,7 @@ import com.swordfish.lemuroid.app.shared.rumble.RumbleManager
 import com.swordfish.lemuroid.app.shared.settings.ControllerConfigsManager
 import com.swordfish.lemuroid.app.shared.settings.HapticFeedbackMode
 import com.swordfish.lemuroid.common.longAnimationDuration
+import com.swordfish.lemuroid.lib.cheats.CheatsManager
 import com.swordfish.lemuroid.lib.controller.ControllerConfig
 import com.swordfish.lemuroid.lib.core.CoreVariablesManager
 import com.swordfish.lemuroid.lib.game.GameLoader
@@ -58,6 +60,7 @@ class BaseGameScreenViewModel(
     statesPreviewManager: StatesPreviewManager,
     coreVariablesManager: CoreVariablesManager,
     rumbleManager: RumbleManager,
+    cheatsManager: CheatsManager,
 ) : ViewModel(), DefaultLifecycleObserver {
     class Factory(
         private val appContext: Context,
@@ -73,6 +76,7 @@ class BaseGameScreenViewModel(
         private val statesPreviewManager: StatesPreviewManager,
         private val coreVariablesManager: CoreVariablesManager,
         private val rumbleManager: RumbleManager,
+        private val cheatsManager: CheatsManager,
     ) : ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             return BaseGameScreenViewModel(
@@ -89,6 +93,7 @@ class BaseGameScreenViewModel(
                 statesPreviewManager,
                 coreVariablesManager,
                 rumbleManager,
+                cheatsManager,
             ) as T
         }
     }
@@ -141,6 +146,15 @@ class BaseGameScreenViewModel(
             statesPreviewManager,
             sideEffects,
         )
+    private val cheats =
+        GameViewModelCheats(
+            appContext,
+            game,
+            systemCoreConfig,
+            retroGameView,
+            cheatsManager,
+            sideEffects,
+        )
 
     val loadingState = MutableStateFlow(false)
 
@@ -186,6 +200,7 @@ class BaseGameScreenViewModel(
             gameData.quickSaveData?.let {
                 saves.restoreAutoSaveAsync(it)
             }
+            cheats.applyInitialCheats()
         }
         return result
     }
@@ -248,6 +263,7 @@ class BaseGameScreenViewModel(
         if (loadingState.value) return
         withLoading {
             saves.loadSlot(index)
+            cheats.refresh(force = true)
         }
     }
 
@@ -265,6 +281,9 @@ class BaseGameScreenViewModel(
         withLoading {
             saves.loadQuickSave()
         }
+        viewModelScope.launch {
+            cheats.refresh(force = true)
+        }
     }
 
     fun toggleFastForward() {
@@ -279,10 +298,18 @@ class BaseGameScreenViewModel(
             try {
                 delay(appContext.longAnimationDuration().toLong())
                 retroGameView.retroGameViewFlow().reset()
+                cheats.refresh(force = true)
             } catch (e: Throwable) {
                 Timber.e(e, "Error in reset")
             }
         }
+
+    /** Re-applies the cheats of this game if they changed on disk, e.g. after editing them in the game menu. */
+    fun refreshCheats() {
+        viewModelScope.launch {
+            cheats.refresh()
+        }
+    }
 
     fun requestFinish() {
         if (loadingState.value) return

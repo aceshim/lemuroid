@@ -141,6 +141,19 @@ fun GameMenuHomeScreen(
             },
         )
 
+        if (gameMenuRequest.coreConfig.cheatsSupported) {
+            LemuroidSettingsMenuLink(
+                title = { Text(text = stringResource(id = R.string.game_menu_cheats)) },
+                icon = {
+                    Icon(
+                        painterResource(R.drawable.ic_menu_cheats),
+                        contentDescription = stringResource(id = R.string.game_menu_cheats),
+                    )
+                },
+                onClick = { navController.navigateToRoute(GameMenuRoute.CHEATS) },
+            )
+        }
+
         if (gameMenuRequest.advancedCoreOptions.isNotEmpty() || gameMenuRequest.coreOptions.isNotEmpty()) {
             LemuroidSettingsMenuLink(
                 title = { Text(text = stringResource(id = R.string.game_menu_settings)) },

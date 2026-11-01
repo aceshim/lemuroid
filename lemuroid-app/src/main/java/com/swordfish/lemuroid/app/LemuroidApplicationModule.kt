@@ -44,6 +44,7 @@ import com.swordfish.lemuroid.ext.feature.core.CoreUpdaterImpl
 import com.swordfish.lemuroid.ext.feature.review.ReviewManager
 import com.swordfish.lemuroid.ext.feature.savesync.SaveSyncManagerImpl
 import com.swordfish.lemuroid.lib.bios.BiosManager
+import com.swordfish.lemuroid.lib.cheats.CheatsManager
 import com.swordfish.lemuroid.lib.core.CoreUpdater
 import com.swordfish.lemuroid.lib.core.CoreVariablesManager
 import com.swordfish.lemuroid.lib.core.CoresSelection
@@ -244,6 +245,11 @@ abstract class LemuroidApplicationModule {
         @PerApp
         @JvmStatic
         fun statesPreviewManager(directoriesManager: DirectoriesManager) = StatesPreviewManager(directoriesManager)
+
+        @Provides
+        @PerApp
+        @JvmStatic
+        fun cheatsManager(directoriesManager: DirectoriesManager) = CheatsManager(directoriesManager)
 
         @Provides
         @PerApp

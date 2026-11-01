@@ -9,6 +9,8 @@
 
 ## Description
 
+This fork adds a native cheat manager for Game Boy Advance games (GameShark, Action Replay, CodeBreaker and raw codes). See [CHEATS.md](CHEATS.md) for usage, formats and limitations.
+
 Lemuroid is an open-source emulation project for Android based on Libretro. Its main goal is ease of use, good Android integration and a great user experience.
 
 It originated from a rib of [Retrograde](https://github.com/retrograde/retrograde-android), but graduated to a standalone project integrating [LibretroDroid](https://github.com/Swordfish90/LibretroDroid).

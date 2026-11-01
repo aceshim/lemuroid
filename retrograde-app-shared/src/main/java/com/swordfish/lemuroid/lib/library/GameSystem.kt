@@ -573,6 +573,7 @@ data class GameSystem(
                     listOf(
                         SystemCoreConfig(
                             CoreID.MGBA,
+                            cheatsSupported = true,
                             exposedSettings =
                                 listOf(
                                     ExposedSetting(

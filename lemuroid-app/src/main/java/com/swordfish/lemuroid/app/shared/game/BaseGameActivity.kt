@@ -30,6 +30,7 @@ import com.swordfish.lemuroid.common.coroutines.launchOnState
 import com.swordfish.lemuroid.common.displayToast
 import com.swordfish.lemuroid.common.dump
 import com.swordfish.lemuroid.common.kotlin.serializable
+import com.swordfish.lemuroid.lib.cheats.CheatsManager
 import com.swordfish.lemuroid.lib.core.CoreVariablesManager
 import com.swordfish.lemuroid.lib.game.GameLoader
 import com.swordfish.lemuroid.lib.library.ExposedSetting
@@ -82,6 +83,9 @@ abstract class BaseGameActivity : ImmersiveActivity() {
     lateinit var rumbleManager: RumbleManager
 
     @Inject
+    lateinit var cheatsManager: CheatsManager
+
+    @Inject
     lateinit var sharedPreferences: Lazy<SharedPreferences>
 
     private lateinit var baseGameScreenViewModel: BaseGameScreenViewModel
@@ -112,6 +116,7 @@ abstract class BaseGameActivity : ImmersiveActivity() {
                 statesPreviewManager,
                 coreVariablesManager,
                 rumbleManager,
+                cheatsManager,
             )
         }
 
@@ -365,6 +370,10 @@ abstract class BaseGameActivity : ImmersiveActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == DIALOG_REQUEST) {
             Timber.i("Game menu dialog response: ${data?.extras.dump()}")
+            // Cheats are edited in place from the menu, so check for changes on every return. A reset re-applies them anyway.
+            if (data?.getBooleanExtra(GameMenuContract.RESULT_RESET, false) != true) {
+                baseGameScreenViewModel.refreshCheats()
+            }
             if (data?.getBooleanExtra(GameMenuContract.RESULT_RESET, false) == true) {
                 GlobalScope.launch {
                     baseGameScreenViewModel.reset()

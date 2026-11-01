@@ -30,6 +30,11 @@ class DirectoriesManager(private val appContext: Context) {
             mkdirs()
         }
 
+    fun getCheatsDirectory(): File =
+        File(appContext.getExternalFilesDir(null), "cheats").apply {
+            mkdirs()
+        }
+
     fun getSavesDirectory(): File =
         File(appContext.getExternalFilesDir(null), "saves").apply {
             mkdirs()

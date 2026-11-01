@@ -51,6 +51,8 @@ dependencies {
     implementation(deps.libs.flowPreferences)
 
     kapt(deps.libs.androidx.room.compiler)
+
+    testImplementation(deps.libs.junit)
 }
 
 android {

@@ -42,6 +42,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.swordfish.lemuroid.R
+import com.swordfish.lemuroid.app.mobile.feature.gamemenu.cheats.GameMenuCheatsScreen
+import com.swordfish.lemuroid.app.mobile.feature.gamemenu.cheats.GameMenuCheatsViewModel
 import com.swordfish.lemuroid.app.mobile.feature.gamemenu.coreoptions.GameMenuCoreOptionsScreen
 import com.swordfish.lemuroid.app.mobile.feature.gamemenu.coreoptions.GameMenuCoreOptionsViewModel
 import com.swordfish.lemuroid.app.mobile.feature.gamemenu.states.GameMenuStatesScreen
@@ -52,6 +54,7 @@ import com.swordfish.lemuroid.app.shared.coreoptions.LemuroidCoreOption
 import com.swordfish.lemuroid.app.shared.input.InputDeviceManager
 import com.swordfish.lemuroid.common.kotlin.serializable
 import com.swordfish.lemuroid.lib.android.RetrogradeComponentActivity
+import com.swordfish.lemuroid.lib.cheats.CheatsManager
 import com.swordfish.lemuroid.lib.library.SystemCoreConfig
 import com.swordfish.lemuroid.lib.library.db.entity.Game
 import com.swordfish.lemuroid.lib.saves.StatesManager
@@ -69,6 +72,9 @@ class GameMenuActivity : RetrogradeComponentActivity() {
 
     @Inject
     lateinit var statesPreviewManager: StatesPreviewManager
+
+    @Inject
+    lateinit var cheatsManager: CheatsManager
 
     data class GameMenuRequest(
         val coreOptions: List<LemuroidCoreOption>,
@@ -224,6 +230,13 @@ class GameMenuActivity : RetrogradeComponentActivity() {
                                 factory = GameMenuCoreOptionsViewModel.Factory(inputDeviceManager),
                             ),
                             gameMenuRequest,
+                        )
+                    }
+                    composable(GameMenuRoute.CHEATS) {
+                        GameMenuCheatsScreen(
+                            viewModel(
+                                factory = GameMenuCheatsViewModel.Factory(gameMenuRequest, cheatsManager),
+                            ),
                         )
                     }
                 }
