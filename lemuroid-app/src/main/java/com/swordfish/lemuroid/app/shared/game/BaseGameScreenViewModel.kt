@@ -154,6 +154,7 @@ class BaseGameScreenViewModel(
             retroGameView,
             cheatsManager,
             sideEffects,
+            viewModelScope,
         )
 
     val loadingState = MutableStateFlow(false)

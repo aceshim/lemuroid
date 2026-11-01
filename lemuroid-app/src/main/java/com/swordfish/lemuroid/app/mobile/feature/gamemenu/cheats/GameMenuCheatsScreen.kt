@@ -1,18 +1,23 @@
 package com.swordfish.lemuroid.app.mobile.feature.gamemenu.cheats
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalTextStyle
@@ -27,6 +32,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
@@ -39,6 +45,7 @@ import com.swordfish.lemuroid.lib.cheats.Cheat
 import com.swordfish.lemuroid.lib.cheats.CheatCompilationResult
 import com.swordfish.lemuroid.lib.cheats.CheatError
 import com.swordfish.lemuroid.lib.cheats.CheatFormat
+import com.swordfish.lemuroid.lib.cheats.presets.CheatPreset
 
 @Composable
 fun GameMenuCheatsScreen(viewModel: GameMenuCheatsViewModel) {
@@ -47,6 +54,7 @@ fun GameMenuCheatsScreen(viewModel: GameMenuCheatsViewModel) {
 
     var editorVisible by remember { mutableStateOf(false) }
     var editedCheat by remember { mutableStateOf<Cheat?>(null) }
+    var presetsVisible by remember { mutableStateOf(false) }
 
     Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
         if (state.value.loaded && entries.isEmpty()) {
@@ -69,6 +77,20 @@ fun GameMenuCheatsScreen(viewModel: GameMenuCheatsViewModel) {
             )
         }
 
+        if (state.value.presets.isNotEmpty()) {
+            LemuroidSettingsMenuLink(
+                enabled = state.value.loaded,
+                title = { Text(text = stringResource(R.string.game_menu_cheats_add_from_list)) },
+                icon = {
+                    Icon(
+                        Icons.AutoMirrored.Filled.List,
+                        contentDescription = stringResource(R.string.game_menu_cheats_add_from_list),
+                    )
+                },
+                onClick = { presetsVisible = true },
+            )
+        }
+
         LemuroidSettingsMenuLink(
             enabled = state.value.loaded,
             title = { Text(text = stringResource(R.string.game_menu_cheats_add)) },
@@ -81,6 +103,17 @@ fun GameMenuCheatsScreen(viewModel: GameMenuCheatsViewModel) {
             onClick = {
                 editedCheat = null
                 editorVisible = true
+            },
+        )
+    }
+
+    if (presetsVisible) {
+        CheatPresetsDialog(
+            presets = state.value.presets,
+            onDismiss = { presetsVisible = false },
+            onAdd = {
+                viewModel.addPresets(it)
+                presetsVisible = false
             },
         )
     }
@@ -102,6 +135,89 @@ fun GameMenuCheatsScreen(viewModel: GameMenuCheatsViewModel) {
             },
         )
     }
+}
+
+@Composable
+private fun CheatPresetsDialog(
+    presets: List<GameMenuCheatsViewModel.PresetEntry>,
+    onDismiss: () -> Unit,
+    onAdd: (List<CheatPreset>) -> Unit,
+) {
+    val selected = remember { mutableStateOf(setOf<CheatPreset>()) }
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(text = stringResource(R.string.game_menu_cheats_presets_title)) },
+        text = {
+            Column(
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .verticalScroll(rememberScrollState()),
+            ) {
+                Text(
+                    text = stringResource(R.string.game_menu_cheats_presets_hint),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.padding(bottom = 8.dp),
+                )
+                presets.forEach { entry ->
+                    val isChecked = entry.alreadyAdded || entry.preset in selected.value
+                    Row(
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .clickable(enabled = !entry.alreadyAdded) {
+                                    selected.value =
+                                        if (entry.preset in selected.value) {
+                                            selected.value - entry.preset
+                                        } else {
+                                            selected.value + entry.preset
+                                        }
+                                }
+                                .padding(vertical = 4.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Checkbox(
+                            checked = isChecked,
+                            onCheckedChange = null,
+                            enabled = !entry.alreadyAdded,
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Column {
+                            Text(
+                                text = "[${entry.preset.region}] ${entry.preset.name}",
+                                style = MaterialTheme.typography.bodyMedium,
+                            )
+                            Text(
+                                text =
+                                    if (entry.alreadyAdded) {
+                                        stringResource(R.string.game_menu_cheats_presets_added)
+                                    } else {
+                                        entry.preset.notes
+                                    },
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            )
+                        }
+                    }
+                }
+            }
+        },
+        confirmButton = {
+            TextButton(
+                enabled = selected.value.isNotEmpty(),
+                onClick = { onAdd(presets.map { it.preset }.filter { it in selected.value }) },
+            ) {
+                Text(text = stringResource(R.string.game_menu_cheats_presets_add))
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text(text = stringResource(R.string.game_menu_cheats_cancel))
+            }
+        },
+    )
 }
 
 @Composable
@@ -291,6 +407,7 @@ private fun errorMessage(error: CheatError?): String? {
                 error.lineNumber,
                 stringResource(error.expected.labelId()),
             )
+        is CheatError.TooLong -> stringResource(R.string.game_menu_cheats_error_too_long, error.maxLines)
     }
 }
 
@@ -300,5 +417,6 @@ private fun CheatFormat.labelId(): Int {
         CheatFormat.GAMESHARK -> R.string.game_menu_cheats_format_gameshark
         CheatFormat.CODEBREAKER -> R.string.game_menu_cheats_format_codebreaker
         CheatFormat.RAW -> R.string.game_menu_cheats_format_raw
+        CheatFormat.ACTION_REPLAY_DS -> R.string.game_menu_cheats_format_action_replay_ds
     }
 }

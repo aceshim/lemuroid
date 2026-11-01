@@ -1,18 +1,20 @@
-# Cheat support (Game Boy Advance)
+# Cheat support (Game Boy Advance and Nintendo DS)
 
 This fork adds a small, native cheat manager to Lemuroid. It reuses the libretro cheat API that the
 emulator cores already implement (`retro_cheat_set` / `retro_cheat_reset`, exposed by LibretroDroid),
 keeps everything local, and leaves the rest of Lemuroid untouched.
 
-Phase 1 targets Game Boy Advance (mGBA core). The design lets other cores opt in later.
+Supported today: Game Boy Advance (mGBA core) and Nintendo DS (melonDS core). The design lets other
+cores opt in later.
 
 ## How to use it
 
-1. Open a GBA game.
+1. Open a GBA or DS game.
 2. Open the in-game menu (the menu button on the touch overlay, or the gamepad shortcut).
-3. Tap **Cheats**.
-4. Tap **Add cheat**, give it a name, paste the code(s), pick a format (or leave **Auto**) and tap **Save**.
-   Multi-line codes are supported: one code per line.
+3. Tap **Cheats** (between Fast-Forward and Edit Controls).
+4. Either tap **Add from list** and tick the ready-made cheats for this game (shown only when the
+   catalog has entries for the game), or tap **Add cheat**, give it a name, paste the code(s), pick a
+   format (or leave **Auto**) and tap **Save**. Multi-line codes are supported: one code per line.
 5. Use the switch next to each cheat to enable or disable it. Tap a cheat to edit or delete it.
 6. Close the menu. Lemuroid re-applies the enabled cheats immediately, without restarting the game,
    and shows a toast such as "2 cheats active".
@@ -26,7 +28,8 @@ Cheats are stored per game and restored automatically the next time the same gam
 | Auto (default)             | any of the shapes below      | Each line is classified by its shape.                        |
 | GameShark / Action Replay  | `XXXXXXXX YYYYYYYY` (8 + 8)  | GameShark v1/v2 and Action Replay v3. mGBA tells them apart. |
 | CodeBreaker                | `XXXXXXXX YYYY` (8 + 4)      |                                                              |
-| Raw (address:value)        | `AAAAAAAA:VV`, `:VVVV`, `:VVVVVVVV` | VBA-style raw memory patch.                           |
+| Raw (address:value)        | `AAAAAAAA:VV`, `:VVVV`, `:VVVVVVVV` | VBA-style raw memory patch. GBA only.                 |
+| Action Replay DS           | `XXXXXXXX YYYYYYYY` (8 + 8)  | Nintendo DS only. At most 64 lines per cheat.                |
 
 Lines may be entered with or without the space, in upper or lower case, and separated by new lines,
 `+` or `;`. Lines starting with `#` or `//` are ignored. Choosing an explicit format only adds
@@ -34,6 +37,14 @@ validation: mGBA always auto-detects the encryption of a line itself.
 
 Codes that need a "master" / enable code: paste the master code as the first line of the cheat, the
 same way you would in mGBA or RetroArch.
+
+### Built-in list
+
+`lib/cheats/presets/CheatPresets.kt` holds a small catalog of community codes, matched on the game's
+system and title or file name. Today it contains Pokémon HeartGold / SoulSilver (USA, IDs IPKE / IPGE):
+Max Money (hold L+R), Rare Candy x999 (hold L+R, Medicine pocket slot 1) and Walk Through Walls
+(R+B on, L+B off). They come from public cheat sites and are **not verified** by this project; codes
+for other regions (Europe, Japan, Korea) are different and have to be pasted by hand.
 
 ## What changed
 
@@ -43,11 +54,13 @@ Library (`retrograde-app-shared`):
 - `lib/cheats/CheatCompiler.kt`: interface that turns user text into the exact string a core expects,
   with typed errors (`Empty`, `InvalidLine`, `FormatMismatch`).
 - `lib/cheats/GbaCheatCompiler.kt`: the mGBA implementation (validation + canonical shapes).
-- `lib/cheats/CheatCompilers.kt`: core → compiler registry.
+- `lib/cheats/NdsCheatCompiler.kt`: the melonDS implementation (Action Replay DS, line cap, padding).
+- `lib/cheats/CheatCompilers.kt`: core → compiler registry, plus the `CheatApplyMode` each core needs.
+- `lib/cheats/presets/CheatPresets.kt`: the built-in cheat catalog.
 - `lib/cheats/CheatsSerializer.kt`: damage-tolerant JSON encoding of a game's cheat list.
 - `lib/cheats/CheatsManager.kt`: one atomic JSON file per game and core under
   `<app external files>/cheats/<core>/<rom file name>.cheats.json`.
-- `SystemCoreConfig.cheatsSupported` flag, set to `true` for mGBA in `GameSystem`.
+- `SystemCoreConfig.cheatsSupported` flag, set to `true` for mGBA and melonDS in `GameSystem`.
 - `DirectoriesManager.getCheatsDirectory()`.
 
 App (`lemuroid-app`):
@@ -56,10 +69,11 @@ App (`lemuroid-app`):
   moments (first rendered frame, after an auto-save restore, after loading a state, after restart,
   after returning from the menu). Reset + re-add runs atomically on the emulation thread.
 - `BaseGameScreenViewModel` / `BaseGameActivity`: wiring of the above.
-- `mobile/feature/gamemenu/cheats/`: the **Cheats** screen and its view model (Compose, Material 3).
+- `mobile/feature/gamemenu/cheats/`: the **Cheats** screen, the preset picker and the editor
+  (Compose, Material 3) with their view model.
 - `GameMenuHomeScreen` / `GameMenuNavigationRoutes` / `GameMenuActivity`: the new menu entry and route.
 - `LemuroidApplicationModule`: Dagger provider for `CheatsManager`.
-- New strings and the `ic_menu_cheats` icon.
+- New strings (English and Korean) and the `ic_menu_cheats` icon.
 
 Tests (`retrograde-app-shared/src/test`): JUnit tests for the compiler and the serializer.
 
@@ -72,6 +86,13 @@ Tests (`retrograde-app-shared/src/test`): JUnit tests for the compiler and the s
   drops everything else, and it never reports parse failures through the libretro API. All validation
   and canonicalisation therefore happens in `GbaCheatCompiler` before anything reaches the core, and
   the app reports what it did (and what it skipped) with toasts instead of assuming success.
+- **The melonDS libretro port executes a code once per `retro_cheat_set` call and forgets it**: its
+  per-frame cheat loop (`AREngine::RunCheats`) is only fed from a cheat file the port never loads, and
+  `retro_cheat_reset` is empty. So for DS games `GameViewModelCheats` re-sends the enabled cheats every
+  4 rendered frames (about 15 times a second) on the emulation thread. Button-triggered codes therefore
+  need the button held for a moment. The port also parses into a fixed 64-line buffer without bounds
+  checks and copies 128 bytes of the string as the code name, so `NdsCheatCompiler` caps cheats at 64
+  lines and pads the string to 128 characters.
 - Cheats are **not** written into save files, save states or SRAM. Loading an old state works as
   before; the enabled cheats are simply re-applied afterwards.
 - Persistence is a per-game JSON file next to the save states instead of a new Room table: no database
@@ -79,7 +100,8 @@ Tests (`retrograde-app-shared/src/test`): JUnit tests for the compiler and the s
 
 ## Adding another core later
 
-1. Write a `CheatCompiler` that matches that core's `retro_cheat_set` parser (read its `libretro.c`).
+1. Write a `CheatCompiler` that matches that core's `retro_cheat_set` parser (read its `libretro.c`),
+   and declare whether the core keeps cheats (`PERSISTENT`) or runs them once (`EVERY_FRAME`).
 2. Register it in `CheatCompilers.forCore`.
 3. Set `cheatsSupported = true` on the matching `SystemCoreConfig`.
 
@@ -87,7 +109,11 @@ Nothing else needs to change: the menu entry, persistence and lifecycle handling
 
 ## Known limitations
 
-- Only GBA (mGBA) is enabled. Other cores keep their previous behaviour.
+- Only GBA (mGBA) and DS (melonDS) are enabled. Other cores keep their previous behaviour.
+- DS cheats are re-sent about 15 times a second instead of once per frame, to keep the core's
+  per-call logging cheap. Codes that must act on every single frame may flicker.
+- There is no Action Replay code that makes HeartGold / SoulSilver run faster; use Lemuroid's own
+  Fast-Forward toggle (2x) in the same menu, and set the in-game text speed to Fast.
 - The TV (leanback) game menu does not show the Cheats entry yet. Cheats configured on a phone still
   apply when the same ROM is launched through the TV UI, because the game screen is shared.
 - The core gives no feedback about whether an individual code had any effect. A well-formed code for

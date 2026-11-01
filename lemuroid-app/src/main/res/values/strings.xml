@@ -135,7 +135,12 @@
     <string name="game_menu_tilt_sensor">Tilt Sensor</string>
     <string name="game_menu_cheats">Cheats</string>
     <string name="game_menu_cheats_add">Add cheat</string>
-    <string name="game_menu_cheats_empty">No cheats yet. Add one and paste GameShark, Action Replay or CodeBreaker codes, one code per line.</string>
+    <string name="game_menu_cheats_empty">No cheats yet. Pick one from the list or add your own: paste GameShark, Action Replay or CodeBreaker codes, one code per line.</string>
+    <string name="game_menu_cheats_add_from_list">Add from list</string>
+    <string name="game_menu_cheats_presets_title">Cheats for this game</string>
+    <string name="game_menu_cheats_presets_hint">Community codes, not verified. Pick the region of your ROM and save your game first.</string>
+    <string name="game_menu_cheats_presets_added">Already added</string>
+    <string name="game_menu_cheats_presets_add">Add selected</string>
     <string name="game_menu_cheats_invalid_code">Invalid code</string>
     <string name="game_menu_cheats_dialog_add">Add cheat</string>
     <string name="game_menu_cheats_dialog_edit">Edit cheat</string>
@@ -148,9 +153,11 @@
     <string name="game_menu_cheats_format_gameshark">GameShark / Action Replay</string>
     <string name="game_menu_cheats_format_codebreaker">CodeBreaker</string>
     <string name="game_menu_cheats_format_raw">Raw (address:value)</string>
+    <string name="game_menu_cheats_format_action_replay_ds">Action Replay DS</string>
     <string name="game_menu_cheats_error_empty">Enter at least one code</string>
     <string name="game_menu_cheats_error_invalid_line">Line %1$d is not a valid code: %2$s</string>
     <string name="game_menu_cheats_error_format_mismatch">Line %1$d is not a %2$s code</string>
+    <string name="game_menu_cheats_error_too_long">A cheat can have at most %1$d lines</string>
     <string name="game_menu_cheats_save">Save</string>
     <string name="game_menu_cheats_delete">Delete</string>
     <string name="game_menu_cheats_cancel">Cancel</string>

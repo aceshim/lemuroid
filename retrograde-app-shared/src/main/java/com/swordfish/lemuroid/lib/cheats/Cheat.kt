@@ -22,6 +22,9 @@ enum class CheatFormat {
 
     /** Raw memory patch: `AAAAAAAA:VV`, `AAAAAAAA:VVVV` or `AAAAAAAA:VVVVVVVV`. */
     RAW,
+
+    /** Action Replay DS style: 8 + 8 hex digits per line (Nintendo DS). */
+    ACTION_REPLAY_DS,
 }
 
 /** A single cheat as entered by the user. One cheat can span multiple code lines. */

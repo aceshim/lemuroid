@@ -24,6 +24,8 @@ object GbaCheatCompiler : CheatCompiler {
     override val supportedFormats: List<CheatFormat> =
         listOf(CheatFormat.AUTO, CheatFormat.GAMESHARK, CheatFormat.CODEBREAKER, CheatFormat.RAW)
 
+    override val applyMode: CheatApplyMode = CheatApplyMode.PERSISTENT
+
     override fun compile(
         code: String,
         format: CheatFormat,
@@ -47,7 +49,7 @@ object GbaCheatCompiler : CheatCompiler {
             compiled.add(canonicalize(compact, detected))
         }
 
-        return CheatCompilationResult.Success(compiled)
+        return CheatCompilationResult.Success(compiled, compiled.joinToString("+"))
     }
 
     /** Splits user text into candidate lines. Accepts newlines, `+` and `;` as separators and skips comments. */
@@ -84,7 +86,8 @@ object GbaCheatCompiler : CheatCompiler {
                     }
                 compact.padEnd(targetLength, ' ')
             }
-            CheatFormat.AUTO -> throw IllegalArgumentException("AUTO is not a concrete format")
+            CheatFormat.AUTO, CheatFormat.ACTION_REPLAY_DS ->
+                throw IllegalArgumentException("$format is not a GBA format")
         }
     }
 }

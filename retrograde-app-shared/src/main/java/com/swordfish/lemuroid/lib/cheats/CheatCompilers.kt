@@ -12,6 +12,7 @@ object CheatCompilers {
     fun forCore(coreID: CoreID): CheatCompiler? {
         return when (coreID) {
             CoreID.MGBA -> GbaCheatCompiler
+            CoreID.MELONDS -> NdsCheatCompiler
             else -> null
         }
     }

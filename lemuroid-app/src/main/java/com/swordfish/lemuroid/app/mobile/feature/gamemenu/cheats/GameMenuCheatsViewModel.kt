@@ -11,6 +11,8 @@ import com.swordfish.lemuroid.lib.cheats.CheatCompilers
 import com.swordfish.lemuroid.lib.cheats.CheatError
 import com.swordfish.lemuroid.lib.cheats.CheatFormat
 import com.swordfish.lemuroid.lib.cheats.CheatsManager
+import com.swordfish.lemuroid.lib.cheats.presets.CheatPreset
+import com.swordfish.lemuroid.lib.cheats.presets.CheatPresets
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
@@ -36,9 +38,15 @@ class GameMenuCheatsViewModel(
         val error: CheatError?,
     )
 
+    data class PresetEntry(
+        val preset: CheatPreset,
+        val alreadyAdded: Boolean,
+    )
+
     data class State(
         val loaded: Boolean = false,
         val entries: List<Entry> = emptyList(),
+        val presets: List<PresetEntry> = emptyList(),
     )
 
     private val game = gameMenuRequest.game
@@ -49,9 +57,21 @@ class GameMenuCheatsViewModel(
     private val loaded = MutableStateFlow(false)
     private val persistMutex = Mutex()
 
+    private val presets: List<CheatPreset> =
+        if (compiler != null) {
+            CheatPresets.forGame(game.systemId, game.title, game.fileName)
+        } else {
+            emptyList()
+        }
+
     val uiState: Flow<State> =
         combine(cheats, loaded) { list, isLoaded ->
-            State(isLoaded, list.map { Entry(it, validationError(it)) })
+            val codes = list.map { it.code }.toSet()
+            State(
+                loaded = isLoaded,
+                entries = list.map { Entry(it, validationError(it)) },
+                presets = presets.map { PresetEntry(it, it.code in codes) },
+            )
         }
 
     val supportedFormats: List<CheatFormat>
@@ -78,6 +98,17 @@ class GameMenuCheatsViewModel(
             } else {
                 list + cheat
             }
+        }
+    }
+
+    /** Adds the given presets as enabled cheats, skipping the ones already present. */
+    fun addPresets(selected: List<CheatPreset>) {
+        update { list ->
+            val codes = list.map { it.code }.toSet()
+            list +
+                selected
+                    .filter { it.code !in codes }
+                    .map { Cheat(name = it.name, code = it.code, format = it.format, enabled = true) }
         }
     }
 

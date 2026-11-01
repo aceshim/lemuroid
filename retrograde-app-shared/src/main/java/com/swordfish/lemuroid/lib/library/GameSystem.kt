@@ -966,6 +966,7 @@ data class GameSystem(
                         ),
                         SystemCoreConfig(
                             CoreID.MELONDS,
+                            cheatsSupported = true,
                             exposedSettings =
                                 listOf(
                                     ExposedSetting(
