@@ -135,3 +135,12 @@ git submodule update --init
 Requirements: JDK 17+, Android SDK with platform 35 and build-tools 34.0.0, and network access to
 `dl.google.com` (SDK and AndroidX artifacts), `jitpack.io` (LibretroDroid) and Maven Central.
 Unit tests: `./gradlew :retrograde-app-shared:testDebugUnitTest`.
+
+## Verification status
+
+- `:retrograde-app-shared:testDebugUnitTest`: 34 tests pass (GBA compiler 17, DS compiler 7,
+  serializer 7, presets 3).
+- `:lemuroid-app:assembleFreeBundleDebug`: builds; the debug APK bundles all cores and installs as
+  `com.swordfish.lemuroid.debug` next to the stock app.
+- Not yet done: on-device checks (effect in game, state load, restart, save files). Run them on a
+  phone with a homebrew or your own ROM before relying on a code.
