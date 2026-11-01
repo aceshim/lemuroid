@@ -110,6 +110,8 @@ fun GameMenuCheatsScreen(viewModel: GameMenuCheatsViewModel) {
     if (presetsVisible) {
         CheatPresetsDialog(
             presets = state.value.presets,
+            refreshing = state.value.refreshingPresets,
+            onRefresh = viewModel::refreshPresets,
             onDismiss = { presetsVisible = false },
             onAdd = {
                 viewModel.addPresets(it)
@@ -140,6 +142,8 @@ fun GameMenuCheatsScreen(viewModel: GameMenuCheatsViewModel) {
 @Composable
 private fun CheatPresetsDialog(
     presets: List<GameMenuCheatsViewModel.PresetEntry>,
+    refreshing: Boolean,
+    onRefresh: () -> Unit,
     onDismiss: () -> Unit,
     onAdd: (List<CheatPreset>) -> Unit,
 ) {
@@ -213,8 +217,22 @@ private fun CheatPresetsDialog(
             }
         },
         dismissButton = {
-            TextButton(onClick = onDismiss) {
-                Text(text = stringResource(R.string.game_menu_cheats_cancel))
+            Row {
+                TextButton(enabled = !refreshing, onClick = onRefresh) {
+                    Text(
+                        text =
+                            stringResource(
+                                if (refreshing) {
+                                    R.string.game_menu_cheats_presets_refreshing
+                                } else {
+                                    R.string.game_menu_cheats_presets_refresh
+                                },
+                            ),
+                    )
+                }
+                TextButton(onClick = onDismiss) {
+                    Text(text = stringResource(R.string.game_menu_cheats_cancel))
+                }
             }
         },
     )

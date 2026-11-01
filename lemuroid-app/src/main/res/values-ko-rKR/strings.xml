@@ -112,6 +112,8 @@
     <string name="game_menu_cheats_presets_hint">커뮤니티 코드이며 검증되지 않았습니다. 롬 지역에 맞는 코드를 고르고, 먼저 게임을 저장하세요.</string>
     <string name="game_menu_cheats_presets_added">이미 추가됨</string>
     <string name="game_menu_cheats_presets_add">선택 항목 추가</string>
+    <string name="game_menu_cheats_presets_refresh">목록 갱신</string>
+    <string name="game_menu_cheats_presets_refreshing">갱신 중…</string>
     <string name="game_menu_cheats_invalid_code">잘못된 코드</string>
     <string name="game_menu_cheats_dialog_add">치트 추가</string>
     <string name="game_menu_cheats_dialog_edit">치트 편집</string>

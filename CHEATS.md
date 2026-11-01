@@ -38,13 +38,37 @@ validation: mGBA always auto-detects the encryption of a line itself.
 Codes that need a "master" / enable code: paste the master code as the first line of the cheat, the
 same way you would in mGBA or RetroArch.
 
-### Built-in list
+### Built-in list and GitHub catalog
 
-`lib/cheats/presets/CheatPresets.kt` holds a small catalog of community codes, matched on the game's
-system and title or file name. Today it contains Pokémon HeartGold / SoulSilver (USA, IDs IPKE / IPGE):
-Max Money (hold L+R), Rare Candy x999 (hold L+R, Medicine pocket slot 1) and Walk Through Walls
-(R+B on, L+B off). They come from public cheat sites and are **not verified** by this project; codes
-for other regions (Europe, Japan, Korea) are different and have to be pasted by hand.
+The catalog is one JSON file: `retrograde-app-shared/src/main/resources/cheats/presets.json`. It is
+bundled with the app, and the same file is downloaded from this repository on GitHub every time the
+Cheats screen opens (and with the **Update list** button in the picker), so editing it on GitHub
+updates every phone without a rebuild. The download URL is `CheatPresetsRepository.DEFAULT_CATALOG_URL`;
+a failed or invalid download keeps the previous list.
+
+Entry format:
+
+```json
+{
+  "systemId": "nds",
+  "titlePattern": "heart ?gold|soul ?silver|하트 ?골드|소울 ?실버",
+  "region": "Korea",
+  "name": "게임 고속화",
+  "format": "ACTION_REPLAY_DS",
+  "notes": "shown under the name in the picker",
+  "code": ["12000E02 0000E000", "120543DC 00004770"]
+}
+```
+
+`titlePattern` is a case-insensitive regex matched against the game's title and file name. Presets
+whose region matches the title (or a Korean title for Korean presets) are listed first.
+
+Today it holds Pokémon HeartGold / SoulSilver codes for the Korean release (message speed, game speed,
+movement x2, screen transitions, EXP bar, instant turning, walk through walls, max money, all
+medicine, all Poké Balls, anti-freeze) and the US release (text speed, movement x2, max money, rare
+candy, walk through walls). They come from public cheat lists and are **not verified** by this
+project. The Korean "게임 고속화" code had a 9-digit value in its source and was corrected to a 16-bit
+value (`0000E000`).
 
 ## What changed
 
@@ -56,7 +80,8 @@ Library (`retrograde-app-shared`):
 - `lib/cheats/GbaCheatCompiler.kt`: the mGBA implementation (validation + canonical shapes).
 - `lib/cheats/NdsCheatCompiler.kt`: the melonDS implementation (Action Replay DS, line cap, padding).
 - `lib/cheats/CheatCompilers.kt`: core → compiler registry, plus the `CheatApplyMode` each core needs.
-- `lib/cheats/presets/CheatPresets.kt`: the built-in cheat catalog.
+- `lib/cheats/presets/`: the cheat catalog (`presets.json` resource, serializer, matcher) and the
+  `CheatPresetsRepository` that downloads it from GitHub and caches it next to the cheat files.
 - `lib/cheats/CheatsSerializer.kt`: damage-tolerant JSON encoding of a game's cheat list.
 - `lib/cheats/CheatsManager.kt`: one atomic JSON file per game and core under
   `<app external files>/cheats/<core>/<rom file name>.cheats.json`.
@@ -119,6 +144,8 @@ Nothing else needs to change: the menu entry, persistence and lifecycle handling
 - The core gives no feedback about whether an individual code had any effect. A well-formed code for
   the wrong game or region is accepted and simply does nothing.
 - Lemuroid's save-sync feature does not sync the cheats directory.
+- The catalog download is the one network call this feature makes. It is a plain GET of a public
+  file on GitHub; nothing about the user or the game is sent.
 - The libretro API carries no cheat format information, so the format chosen in the editor is used for
   validation only; mGBA auto-detects GameShark vs Action Replay encryption per line.
 
@@ -138,8 +165,8 @@ Unit tests: `./gradlew :retrograde-app-shared:testDebugUnitTest`.
 
 ## Verification status
 
-- `:retrograde-app-shared:testDebugUnitTest`: 34 tests pass (GBA compiler 17, DS compiler 7,
-  serializer 7, presets 3).
+- `:retrograde-app-shared:testDebugUnitTest`: 39 tests pass (GBA compiler 17, DS compiler 9,
+  serializer 7, presets 6).
 - `:lemuroid-app:assembleFreeBundleDebug`: builds; the debug APK bundles all cores and installs as
   `com.swordfish.lemuroid.debug` next to the stock app.
 - Not yet done: on-device checks (effect in game, state load, restart, save files). Run them on a

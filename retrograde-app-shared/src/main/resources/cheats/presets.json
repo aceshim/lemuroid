@@ -1,0 +1,258 @@
+{
+  "version": 1,
+  "presets": [
+    {
+      "systemId": "nds",
+      "titlePattern": "heart ?gold|soul ?silver|하트 ?골드|소울 ?실버",
+      "region": "Korea",
+      "name": "메시지 고속화",
+      "format": "ACTION_REPLAY_DS",
+      "notes": "대사·메시지가 즉시 출력됩니다. 항상 켜두는 코드.",
+      "code": [
+        "12002346 00002100",
+        "12020286 00001C0C",
+        "12020288 00004818",
+        "120202B6 0000BD10",
+        "020202B8 E7E53C2D",
+        "120202C6 0000D0DF",
+        "120202D2 0000E7F1"
+      ]
+    },
+    {
+      "systemId": "nds",
+      "titlePattern": "heart ?gold|soul ?silver|하트 ?골드|소울 ?실버",
+      "region": "Korea",
+      "name": "게임 고속화",
+      "format": "ACTION_REPLAY_DS",
+      "notes": "게임 내부 처리 속도 상승. 원문 2번째 값에 오타(9자리)가 있어 0000E000으로 보정함.",
+      "code": [
+        "12000E02 0000E000",
+        "120543DC 00004770"
+      ]
+    },
+    {
+      "systemId": "nds",
+      "titlePattern": "heart ?gold|soul ?silver|하트 ?골드|소울 ?실버",
+      "region": "Korea",
+      "name": "이동속도 2배",
+      "format": "ACTION_REPLAY_DS",
+      "notes": "걷기·달리기 2배. 일부 에뮬레이터에서 충돌 보고가 있으니 먼저 저장하세요.",
+      "code": [
+        "E2000888 00000020",
+        "6837AE06 D0012F03",
+        "D1012F05 60372709",
+        "D0022B02 085F0056",
+        "1C164770 47701C1F",
+        "020625C8 F966F79E"
+      ]
+    },
+    {
+      "systemId": "nds",
+      "titlePattern": "heart ?gold|soul ?silver|하트 ?골드|소울 ?실버",
+      "region": "Korea",
+      "name": "화면 전환 고속화",
+      "format": "ACTION_REPLAY_DS",
+      "notes": "맵 이동·전투 진입 등 화면 전환이 빨라집니다.",
+      "code": [
+        "1200FA10 00002200",
+        "1200FA34 00002200"
+      ]
+    },
+    {
+      "systemId": "nds",
+      "titlePattern": "heart ?gold|soul ?silver|하트 ?골드|소울 ?실버",
+      "region": "Korea",
+      "name": "경험치 바 고속화",
+      "format": "ACTION_REPLAY_DS",
+      "notes": "전투 후 경험치 바가 빨리 찹니다. 낮은 레벨에서는 효과가 없을 수 있음.",
+      "code": [
+        "522663D4 1C16B570",
+        "122663F0 00002300",
+        "12266430 00002101",
+        "1226647A 000046C0"
+      ]
+    },
+    {
+      "systemId": "nds",
+      "titlePattern": "heart ?gold|soul ?silver|하트 ?골드|소울 ?실버",
+      "region": "Korea",
+      "name": "바로 방향 전환",
+      "format": "ACTION_REPLAY_DS",
+      "notes": "방향키를 누르면 제자리 회전 없이 바로 이동. R을 누르고 있는 동안은 꺼집니다.",
+      "code": [
+        "1205D4B6 0000D00C",
+        "1205D804 00000018",
+        "94000130 FEFF0000",
+        "1205D486 0000D017",
+        "1205D804 0000002A",
+        "D0000000 00000000"
+      ]
+    },
+    {
+      "systemId": "nds",
+      "titlePattern": "heart ?gold|soul ?silver|하트 ?골드|소울 ?실버",
+      "region": "Korea",
+      "name": "장애물 무시 (벽 통과)",
+      "format": "ACTION_REPLAY_DS",
+      "notes": "R+B 켜기, L+B 끄기. 먼저 저장하세요.",
+      "code": [
+        "94000130 FCFD0200",
+        "1205DB96 00000200",
+        "D2000000 00000000",
+        "94000130 FCFD0100",
+        "1205DB96 00001C20",
+        "D2000000 00000000"
+      ]
+    },
+    {
+      "systemId": "nds",
+      "titlePattern": "heart ?gold|soul ?silver|하트 ?골드|소울 ?실버",
+      "region": "Korea",
+      "name": "소지금 최대",
+      "format": "ACTION_REPLAY_DS",
+      "notes": "게임 중 SELECT를 1초 정도 누르기.",
+      "code": [
+        "94000130 FFFB0000",
+        "B2112280 00000000",
+        "00000088 000F423F",
+        "D2000000 00000000"
+      ]
+    },
+    {
+      "systemId": "nds",
+      "titlePattern": "heart ?gold|soul ?silver|하트 ?골드|소울 ?실버",
+      "region": "Korea",
+      "name": "모든 회복약 999개 (이상한사탕 포함)",
+      "format": "ACTION_REPLAY_DS",
+      "notes": "게임 중 SELECT를 1초 정도 누르기. 약 주머니 전체를 채웁니다.",
+      "code": [
+        "94000130 FFFB0000",
+        "B2112280 00000000",
+        "D5000000 03E70011",
+        "C0000000 00000024",
+        "D6000000 00000B74",
+        "D4000000 00000001",
+        "D2000000 00000000"
+      ]
+    },
+    {
+      "systemId": "nds",
+      "titlePattern": "heart ?gold|soul ?silver|하트 ?골드|소울 ?실버",
+      "region": "Korea",
+      "name": "모든 몬스터볼 999개",
+      "format": "ACTION_REPLAY_DS",
+      "notes": "게임 중 SELECT를 1초 정도 누르기.",
+      "code": [
+        "94000130 FFFB0000",
+        "B2112280 00000000",
+        "D5000000 03E70001",
+        "C0000000 0000000F",
+        "D6000000 00000D14",
+        "D4000000 00000001",
+        "D2000000 00000000"
+      ]
+    },
+    {
+      "systemId": "nds",
+      "titlePattern": "heart ?gold|하트 ?골드",
+      "region": "Korea",
+      "name": "흑화 방지 (하트골드)",
+      "format": "ACTION_REPLAY_DS",
+      "notes": "게임이 멈추거나 화면이 깨질 때만 켜세요.",
+      "code": [
+        "020DE858 E3A00000"
+      ]
+    },
+    {
+      "systemId": "nds",
+      "titlePattern": "soul ?silver|소울 ?실버",
+      "region": "Korea",
+      "name": "흑화 방지 (소울실버)",
+      "format": "ACTION_REPLAY_DS",
+      "notes": "게임이 멈추거나 화면이 깨질 때만 켜세요.",
+      "code": [
+        "020DE850 E3A00000"
+      ]
+    },
+    {
+      "systemId": "nds",
+      "titlePattern": "heart ?gold|soul ?silver|하트 ?골드|소울 ?실버",
+      "region": "USA",
+      "name": "Increase Text Speed",
+      "format": "ACTION_REPLAY_DS",
+      "notes": "Messages print instantly. Keep it on.",
+      "code": [
+        "12002346 00002100",
+        "120202EE 00001C0C",
+        "120202F0 00004818",
+        "1202031E 0000BD10",
+        "02020320 E7E53C2D",
+        "1202032E 0000D0DF",
+        "1202033A 0000E7F1"
+      ]
+    },
+    {
+      "systemId": "nds",
+      "titlePattern": "heart ?gold|soul ?silver|하트 ?골드|소울 ?실버",
+      "region": "USA",
+      "name": "Movement Speed x2",
+      "format": "ACTION_REPLAY_DS",
+      "notes": "Walk and run twice as fast. Save first.",
+      "code": [
+        "E2000700 00000020",
+        "6837AE06 D0012F03",
+        "D1012F05 60372709",
+        "D0022B02 085F0056",
+        "1C164770 47701C1F",
+        "52000700 6837AE06",
+        "020624D4 F914F79E",
+        "D2000000 00000000"
+      ]
+    },
+    {
+      "systemId": "nds",
+      "titlePattern": "heart ?gold|soul ?silver|하트 ?골드|소울 ?실버",
+      "region": "USA",
+      "name": "Max Money",
+      "format": "ACTION_REPLAY_DS",
+      "notes": "Hold L+R in game (게임 중 L+R 길게 누르기)",
+      "code": [
+        "94000130 FCFF0000",
+        "62111880 00000000",
+        "B2111880 00000000",
+        "00000088 000F423F",
+        "D2000000 00000000"
+      ]
+    },
+    {
+      "systemId": "nds",
+      "titlePattern": "heart ?gold|soul ?silver|하트 ?골드|소울 ?실버",
+      "region": "USA",
+      "name": "Rare Candy x999 (Medicine pocket, slot 1)",
+      "format": "ACTION_REPLAY_DS",
+      "notes": "Hold L+R in game. Replaces slot 1 of the Medicine pocket (약 주머니 1번 칸을 덮어씀)",
+      "code": [
+        "94000130 FCFF0000",
+        "B2111880 00000000",
+        "00000B74 03E70032",
+        "D2000000 00000000"
+      ]
+    },
+    {
+      "systemId": "nds",
+      "titlePattern": "heart ?gold|soul ?silver|하트 ?골드|소울 ?실버",
+      "region": "USA",
+      "name": "Walk Through Walls",
+      "format": "ACTION_REPLAY_DS",
+      "notes": "R+B to enable, L+B to disable. Save first (R+B 켜기, L+B 끄기. 먼저 저장하세요)",
+      "code": [
+        "94000130 FCFD0200",
+        "1205DAA2 00000200",
+        "D2000000 00000000",
+        "94000130 FCFD0100",
+        "1205DAA2 00001C20",
+        "D2000000 00000000"
+      ]
+    }
+  ]
+}

@@ -13,6 +13,7 @@ import com.swordfish.lemuroid.lib.cheats.CheatFormat
 import com.swordfish.lemuroid.lib.cheats.CheatsManager
 import com.swordfish.lemuroid.lib.cheats.presets.CheatPreset
 import com.swordfish.lemuroid.lib.cheats.presets.CheatPresets
+import com.swordfish.lemuroid.lib.cheats.presets.CheatPresetsRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
@@ -23,13 +24,15 @@ import kotlinx.coroutines.sync.withLock
 class GameMenuCheatsViewModel(
     private val gameMenuRequest: GameMenuActivity.GameMenuRequest,
     private val cheatsManager: CheatsManager,
+    private val presetsRepository: CheatPresetsRepository,
 ) : ViewModel() {
     class Factory(
         private val gameMenuRequest: GameMenuActivity.GameMenuRequest,
         private val cheatsManager: CheatsManager,
+        private val presetsRepository: CheatPresetsRepository,
     ) : ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return GameMenuCheatsViewModel(gameMenuRequest, cheatsManager) as T
+            return GameMenuCheatsViewModel(gameMenuRequest, cheatsManager, presetsRepository) as T
         }
     }
 
@@ -47,6 +50,7 @@ class GameMenuCheatsViewModel(
         val loaded: Boolean = false,
         val entries: List<Entry> = emptyList(),
         val presets: List<PresetEntry> = emptyList(),
+        val refreshingPresets: Boolean = false,
     )
 
     private val game = gameMenuRequest.game
@@ -57,20 +61,17 @@ class GameMenuCheatsViewModel(
     private val loaded = MutableStateFlow(false)
     private val persistMutex = Mutex()
 
-    private val presets: List<CheatPreset> =
-        if (compiler != null) {
-            CheatPresets.forGame(game.systemId, game.title, game.fileName)
-        } else {
-            emptyList()
-        }
+    private val presets = MutableStateFlow<List<CheatPreset>>(emptyList())
+    private val refreshingPresets = MutableStateFlow(false)
 
     val uiState: Flow<State> =
-        combine(cheats, loaded) { list, isLoaded ->
+        combine(cheats, loaded, presets, refreshingPresets) { list, isLoaded, presetList, refreshing ->
             val codes = list.map { it.code }.toSet()
             State(
                 loaded = isLoaded,
                 entries = list.map { Entry(it, validationError(it)) },
-                presets = presets.map { PresetEntry(it, it.code in codes) },
+                presets = presetList.map { PresetEntry(it, it.code in codes) },
+                refreshingPresets = refreshing,
             )
         }
 
@@ -82,6 +83,30 @@ class GameMenuCheatsViewModel(
             cheats.value = cheatsManager.getCheats(game, coreID)
             loaded.value = true
         }
+        viewModelScope.launch {
+            loadPresets()
+            refreshPresets()
+        }
+    }
+
+    /** Downloads the latest catalog from GitHub and reloads the list. Silent on failure. */
+    fun refreshPresets() {
+        if (compiler == null || refreshingPresets.value) return
+        viewModelScope.launch {
+            refreshingPresets.value = true
+            try {
+                if (presetsRepository.refresh()) {
+                    loadPresets()
+                }
+            } finally {
+                refreshingPresets.value = false
+            }
+        }
+    }
+
+    private suspend fun loadPresets() {
+        if (compiler == null) return
+        presets.value = CheatPresets.forGame(presetsRepository.getPresets(), game.systemId, game.title, game.fileName)
     }
 
     fun validate(

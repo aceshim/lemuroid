@@ -61,6 +61,22 @@ class NdsCheatCompilerTest {
     }
 
     @Test
+    fun libretroChtStringsWithPlusSeparatedTokensAreAccepted() {
+        val cht = "12000E02+0000E000+120543DC+00004770"
+        assertEquals(listOf("12000E02 0000E000", "120543DC 00004770"), success(cht).lines)
+        assertEquals(
+            listOf("12000E02 0000E000", "120543DC 00004770"),
+            success("12000E020000E000120543DC00004770").lines,
+        )
+    }
+
+    @Test
+    fun oddNumberOfWordsIsRejected() {
+        assertEquals(CheatError.InvalidLine(1, "12000E02 0000E000 120543DC"), failure("12000E02 0000E000 120543DC"))
+        assertEquals(CheatError.InvalidLine(1, "12000E02 0000E0000"), failure("12000E02 0000E0000"))
+    }
+
+    @Test
     fun invalidLinesAreRejected() {
         assertEquals(CheatError.InvalidLine(1, "94000130 FCFF"), failure("94000130 FCFF"))
         assertEquals(CheatError.InvalidLine(2, "02023D50:0F"), failure("94000130 FCFF0000\n02023D50:0F"))

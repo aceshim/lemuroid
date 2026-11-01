@@ -13,7 +13,7 @@ package com.swordfish.lemuroid.lib.cheats
  * - [applyMode] is [CheatApplyMode.EVERY_FRAME], so the app keeps re-sending enabled cheats.
  */
 object NdsCheatCompiler : CheatCompiler {
-    private val HEX_16 = Regex("^[0-9A-F]{16}$")
+    private val HEX_PAIRS = Regex("^(?:[0-9A-F]{16})+$")
 
     const val MAX_LINES = 64
     const val MIN_CODE_LENGTH = 128
@@ -31,24 +31,35 @@ object NdsCheatCompiler : CheatCompiler {
             return CheatCompilationResult.Failure(CheatError.FormatMismatch(1, code.lines().first(), format))
         }
 
-        val lines = GbaCheatCompiler.splitLines(code)
+        val lines = splitLines(code)
         if (lines.isEmpty()) {
             return CheatCompilationResult.Failure(CheatError.Empty)
         }
 
         val compiled = mutableListOf<String>()
         lines.forEachIndexed { index, line ->
-            val compact = line.filterNot { it.isWhitespace() }.uppercase()
-            if (!HEX_16.matches(compact)) {
+            // Accept "XXXXXXXX YYYYYYYY", "XXXXXXXXYYYYYYYY" and libretro .cht strings ("AAAA+BBBB+CCCC+DDDD").
+            val compact = line.filterNot { it.isWhitespace() || it == '+' }.uppercase()
+            if (!HEX_PAIRS.matches(compact)) {
                 return CheatCompilationResult.Failure(CheatError.InvalidLine(index + 1, line))
             }
-            if (compiled.size >= MAX_LINES) {
-                return CheatCompilationResult.Failure(CheatError.TooLong(MAX_LINES))
+            compact.chunked(16).forEach { pair ->
+                if (compiled.size >= MAX_LINES) {
+                    return CheatCompilationResult.Failure(CheatError.TooLong(MAX_LINES))
+                }
+                compiled.add("${pair.substring(0, 8)} ${pair.substring(8)}")
             }
-            compiled.add("${compact.substring(0, 8)} ${compact.substring(8)}")
         }
 
         val libretroCode = compiled.joinToString("+").padEnd(MIN_CODE_LENGTH, ' ')
         return CheatCompilationResult.Success(compiled, libretroCode)
+    }
+
+    /** One entry per text line. `+` is a token separator inside a line (libretro .cht format), not a line break. */
+    private fun splitLines(code: String): List<String> {
+        return code
+            .split('\n', '\r', ';')
+            .map { it.trim() }
+            .filter { it.isNotEmpty() && !it.startsWith("#") && !it.startsWith("//") }
     }
 }

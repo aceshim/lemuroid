@@ -141,6 +141,8 @@
     <string name="game_menu_cheats_presets_hint">Community codes, not verified. Pick the region of your ROM and save your game first.</string>
     <string name="game_menu_cheats_presets_added">Already added</string>
     <string name="game_menu_cheats_presets_add">Add selected</string>
+    <string name="game_menu_cheats_presets_refresh">Update list</string>
+    <string name="game_menu_cheats_presets_refreshing">Updating…</string>
     <string name="game_menu_cheats_invalid_code">Invalid code</string>
     <string name="game_menu_cheats_dialog_add">Add cheat</string>
     <string name="game_menu_cheats_dialog_edit">Edit cheat</string>

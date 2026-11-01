@@ -55,6 +55,7 @@ import com.swordfish.lemuroid.app.shared.input.InputDeviceManager
 import com.swordfish.lemuroid.common.kotlin.serializable
 import com.swordfish.lemuroid.lib.android.RetrogradeComponentActivity
 import com.swordfish.lemuroid.lib.cheats.CheatsManager
+import com.swordfish.lemuroid.lib.cheats.presets.CheatPresetsRepository
 import com.swordfish.lemuroid.lib.library.SystemCoreConfig
 import com.swordfish.lemuroid.lib.library.db.entity.Game
 import com.swordfish.lemuroid.lib.saves.StatesManager
@@ -75,6 +76,9 @@ class GameMenuActivity : RetrogradeComponentActivity() {
 
     @Inject
     lateinit var cheatsManager: CheatsManager
+
+    @Inject
+    lateinit var cheatPresetsRepository: CheatPresetsRepository
 
     data class GameMenuRequest(
         val coreOptions: List<LemuroidCoreOption>,
@@ -235,7 +239,12 @@ class GameMenuActivity : RetrogradeComponentActivity() {
                     composable(GameMenuRoute.CHEATS) {
                         GameMenuCheatsScreen(
                             viewModel(
-                                factory = GameMenuCheatsViewModel.Factory(gameMenuRequest, cheatsManager),
+                                factory =
+                                    GameMenuCheatsViewModel.Factory(
+                                        gameMenuRequest,
+                                        cheatsManager,
+                                        cheatPresetsRepository,
+                                    ),
                             ),
                         )
                     }
