@@ -41,23 +41,20 @@ class NdsCheatCompilerTest {
     }
 
     @Test
-    fun libretroCodeJoinsWithPlusAndIsPaddedForTheNameCopy() {
+    fun libretroCodeMatchesTheMelonDsDsSyntaxExactly() {
+        // The core's own validation regex. Anything that fails it is silently ignored.
+        val melonDsDsSyntax = Regex("^\\s*[0-9A-Fa-f]{8}([+\\s-]*[0-9A-Fa-f]{8})*$")
         val result = success(maxMoney)
-        assertTrue(result.libretroCode.startsWith("94000130 FCFF0000+62111880 00000000+"))
-        assertTrue(result.libretroCode.length >= NdsCheatCompiler.MIN_CODE_LENGTH)
-        assertEquals(result.libretroCode.trimEnd(), result.lines.joinToString("+"))
+        assertEquals(
+            "94000130 FCFF0000+62111880 00000000+B2111880 00000000+00000088 000F423F+D2000000 00000000",
+            result.libretroCode,
+        )
+        assertTrue(melonDsDsSyntax.matches(result.libretroCode))
+        assertTrue(melonDsDsSyntax.matches(success("12002346 00002100").libretroCode))
         // Every token the core will parse is 8 hex digits
-        result.libretroCode.trim().split('+', ' ').forEach {
+        result.libretroCode.split('+', ' ').forEach {
             assertTrue("Bad token '$it'", Regex("^[0-9A-F]{8}$").matches(it))
         }
-    }
-
-    @Test
-    fun longCodesAreNotPaddedTwice() {
-        val longCode = (1..20).joinToString("\n") { "94000130 FCFF0000" }
-        val result = success(longCode)
-        assertEquals(20, result.lines.size)
-        assertEquals(result.lines.joinToString("+"), result.libretroCode)
     }
 
     @Test
@@ -99,8 +96,8 @@ class NdsCheatCompilerTest {
     }
 
     @Test
-    fun applyModeIsEveryFrame() {
-        assertEquals(CheatApplyMode.EVERY_FRAME, compiler.applyMode)
+    fun bothBundledCoresKeepTheirCheats() {
+        assertEquals(CheatApplyMode.PERSISTENT, compiler.applyMode)
         assertEquals(CheatApplyMode.PERSISTENT, GbaCheatCompiler.applyMode)
     }
 }

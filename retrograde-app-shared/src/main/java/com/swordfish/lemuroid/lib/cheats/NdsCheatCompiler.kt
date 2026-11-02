@@ -1,27 +1,25 @@
 package com.swordfish.lemuroid.lib.cheats
 
 /**
- * Cheat compiler for the melonDS libretro core (Nintendo DS), Action Replay DS codes.
+ * Cheat compiler for the melonDS DS libretro core (Nintendo DS), Action Replay DS codes.
  *
- * The port's `retro_cheat_set` splits the string on spaces and `+`, parses every token as a 32-bit hex
- * number into a fixed buffer of 128 words (64 lines) without bounds checks, copies the first 128 bytes
- * of the string into the code name, and then executes the code exactly once. Hence:
- * - every line is canonicalized to `XXXXXXXX YYYYYYYY`,
- * - a cheat is capped at [MAX_LINES] lines,
- * - the final string is padded with spaces to [MIN_CODE_LENGTH] characters so the name copy never
- *   reads past the end of the string,
- * - [applyMode] is [CheatApplyMode.EVERY_FRAME], so the app keeps re-sending enabled cheats.
+ * Lemuroid bundles the "melonDS DS" core (JesseTG port). Its `retro_cheat_set` validates the whole
+ * string against `^\s*[0-9A-Fa-f]{8}([+\s-]*[0-9A-Fa-f]{8})*$`, silently ignores anything else,
+ * keeps the accepted cheats in a list that the emulator runs every frame, honours the `enabled` flag
+ * and clears the list on `retro_cheat_reset`. So the string handed over is exactly the canonical
+ * `XXXXXXXX YYYYYYYY` lines joined with `+`, with nothing before or after, and [applyMode] is
+ * [CheatApplyMode.PERSISTENT].
  */
 object NdsCheatCompiler : CheatCompiler {
     private val HEX_PAIRS = Regex("^(?:[0-9A-F]{16})+$")
 
+    /** Keeps a single cheat at a size any Action Replay implementation handles. */
     const val MAX_LINES = 64
-    const val MIN_CODE_LENGTH = 128
 
     override val supportedFormats: List<CheatFormat> =
         listOf(CheatFormat.AUTO, CheatFormat.ACTION_REPLAY_DS)
 
-    override val applyMode: CheatApplyMode = CheatApplyMode.EVERY_FRAME
+    override val applyMode: CheatApplyMode = CheatApplyMode.PERSISTENT
 
     override fun compile(
         code: String,
@@ -51,8 +49,7 @@ object NdsCheatCompiler : CheatCompiler {
             }
         }
 
-        val libretroCode = compiled.joinToString("+").padEnd(MIN_CODE_LENGTH, ' ')
-        return CheatCompilationResult.Success(compiled, libretroCode)
+        return CheatCompilationResult.Success(compiled, compiled.joinToString("+"))
     }
 
     /** One entry per text line. `+` is a token separator inside a line (libretro .cht format), not a line break. */

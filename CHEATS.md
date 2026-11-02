@@ -81,7 +81,7 @@ Library (`retrograde-app-shared`):
 - `lib/cheats/CheatCompiler.kt`: interface that turns user text into the exact string a core expects,
   with typed errors (`Empty`, `InvalidLine`, `FormatMismatch`).
 - `lib/cheats/GbaCheatCompiler.kt`: the mGBA implementation (validation + canonical shapes).
-- `lib/cheats/NdsCheatCompiler.kt`: the melonDS implementation (Action Replay DS, line cap, padding).
+- `lib/cheats/NdsCheatCompiler.kt`: the melonDS DS implementation (Action Replay DS, line cap).
 - `lib/cheats/CheatCompilers.kt`: core → compiler registry, plus the `CheatApplyMode` each core needs.
 - `lib/cheats/presets/`: the cheat catalog (`presets.json` resource, serializer, matcher) and the
   `CheatPresetsRepository` that downloads it from GitHub and caches it next to the cheat files.
@@ -114,13 +114,13 @@ Tests (`retrograde-app-shared/src/test`): JUnit tests for the compiler and the s
   drops everything else, and it never reports parse failures through the libretro API. All validation
   and canonicalisation therefore happens in `GbaCheatCompiler` before anything reaches the core, and
   the app reports what it did (and what it skipped) with toasts instead of assuming success.
-- **The melonDS libretro port executes a code once per `retro_cheat_set` call and forgets it**: its
-  per-frame cheat loop (`AREngine::RunCheats`) is only fed from a cheat file the port never loads, and
-  `retro_cheat_reset` is empty. So for DS games `GameViewModelCheats` re-sends the enabled cheats every
-  4 rendered frames (about 15 times a second) on the emulation thread. Button-triggered codes therefore
-  need the button held for a moment. The port also parses into a fixed 64-line buffer without bounds
-  checks and copies 128 bytes of the string as the code name, so `NdsCheatCompiler` caps cheats at 64
-  lines and pads the string to 128 characters.
+- **The DS core is "melonDS DS" (JesseTG's port), not the older libretro/melonDS port.** It keeps a
+  list of cheats, runs them every frame, honours the `enabled` flag and clears the list on
+  `retro_cheat_reset`, so DS uses the same reset-and-reapply path as GBA. It validates every string
+  against `^\s*[0-9A-Fa-f]{8}([+\s-]*[0-9A-Fa-f]{8})*$` and silently ignores anything else (the
+  warning goes to a message channel Lemuroid does not display). `NdsCheatCompiler` therefore hands
+  over exactly `XXXXXXXX YYYYYYYY` lines joined with `+`, nothing more. An earlier revision padded the
+  string with spaces for the older port's parser; that made the real core reject every DS cheat.
 - Cheats are **not** written into save files, save states or SRAM. Loading an old state works as
   before; the enabled cheats are simply re-applied afterwards.
 - Persistence is a per-game JSON file next to the save states instead of a new Room table: no database
@@ -129,7 +129,8 @@ Tests (`retrograde-app-shared/src/test`): JUnit tests for the compiler and the s
 ## Adding another core later
 
 1. Write a `CheatCompiler` that matches that core's `retro_cheat_set` parser (read its `libretro.c`),
-   and declare whether the core keeps cheats (`PERSISTENT`) or runs them once (`EVERY_FRAME`).
+   and declare whether the core keeps cheats (`PERSISTENT`, both bundled cores) or runs them once per
+   call (`EVERY_FRAME`, kept for cores that behave like the old libretro/melonDS port).
 2. Register it in `CheatCompilers.forCore`.
 3. Set `cheatsSupported = true` on the matching `SystemCoreConfig`.
 
@@ -138,8 +139,6 @@ Nothing else needs to change: the menu entry, persistence and lifecycle handling
 ## Known limitations
 
 - Only GBA (mGBA) and DS (melonDS) are enabled. Other cores keep their previous behaviour.
-- DS cheats are re-sent about 15 times a second instead of once per frame, to keep the core's
-  per-call logging cheap. Codes that must act on every single frame may flicker.
 - There is no Action Replay code that makes HeartGold / SoulSilver run faster; use Lemuroid's own
   Fast-Forward toggle (2x) in the same menu, and set the in-game text speed to Fast.
 - The TV (leanback) game menu does not show the Cheats entry yet. Cheats configured on a phone still

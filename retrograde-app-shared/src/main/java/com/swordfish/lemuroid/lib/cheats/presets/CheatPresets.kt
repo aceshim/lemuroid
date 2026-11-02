@@ -46,7 +46,10 @@ object CheatPresets {
         fileName: String,
     ): List<CheatPreset> {
         val haystack = "${title.lowercase()} ${fileName.lowercase()}"
-        val looksKorean = haystack.contains("korea") || haystack.any { it in '가'..'힣' }
+        val looksKorean =
+            haystack.contains("kor") ||
+                Regex("[(\\[]k[)\\]]").containsMatchIn(haystack) ||
+                haystack.any { it in '가'..'힣' }
         return presets
             .filter { it.systemId == systemId && it.titlePattern.containsMatchIn(haystack) }
             .sortedByDescending { preset ->

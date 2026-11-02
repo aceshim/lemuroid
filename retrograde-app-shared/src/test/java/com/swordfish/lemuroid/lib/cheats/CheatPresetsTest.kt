@@ -58,6 +58,9 @@ class CheatPresetsTest {
         val us = forGame("nds", "Pokemon - HeartGold Version (USA)", "x.nds")
         assertEquals("USA", us.first().region)
 
+        assertEquals("Korea", forGame("nds", "Pokemon HeartGold (K)", "hg.nds").first().region)
+        assertEquals("Korea", forGame("nds", "Pokemon HeartGold [K]", "hg.nds").first().region)
+
         val koreaTag = forGame("nds", "Pokemon - SoulSilver Version (Korea)", "x.nds")
         assertEquals("Korea", koreaTag.first().region)
         assertTrue(koreaTag.any { it.name == "흑화 방지 (소울실버)" })
