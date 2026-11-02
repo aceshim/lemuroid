@@ -177,6 +177,219 @@
     {
       "systemId": "nds",
       "titlePattern": "heart ?gold|soul ?silver|하트 ?골드|소울 ?실버",
+      "region": "Korea",
+      "name": "전투 경험치 2배",
+      "format": "ACTION_REPLAY_DS",
+      "notes": "전투 후 획득 경험치가 2배.",
+      "code": [
+        "9223F1EE 0000319C",
+        "0223F1F0 60080040",
+        "0223F1F4 309C1C28",
+        "D0000000 00000000"
+      ]
+    },
+    {
+      "systemId": "nds",
+      "titlePattern": "heart ?gold|soul ?silver|하트 ?골드|소울 ?실버",
+      "region": "Korea",
+      "name": "전투 경험치 4배",
+      "format": "ACTION_REPLAY_DS",
+      "notes": "전투 후 획득 경험치가 4배.",
+      "code": [
+        "9223F1EE 0000319C",
+        "0223F1F0 60080080",
+        "0223F1F4 309C1C28",
+        "D0000000 00000000"
+      ]
+    },
+    {
+      "systemId": "nds",
+      "titlePattern": "heart ?gold|soul ?silver|하트 ?골드|소울 ?실버",
+      "region": "Korea",
+      "name": "반드시 포획",
+      "format": "ACTION_REPLAY_DS",
+      "notes": "볼을 던지면 무조건 잡힘. 출처: 디시 레쿠쟈갤(한글판 사용 보고).",
+      "code": [
+        "92248016 00002801",
+        "12248016 00004280",
+        "D2000000 00000000"
+      ]
+    },
+    {
+      "systemId": "nds",
+      "titlePattern": "heart ?gold|soul ?silver|하트 ?골드|소울 ?실버",
+      "region": "Korea",
+      "name": "야생 포켓몬 개체치 최대 (6V)",
+      "format": "ACTION_REPLAY_DS",
+      "notes": "야생에서 만나는 포켓몬이 전부 6V.",
+      "code": [
+        "1206E106 0000201F",
+        "1206E11C 0000201F",
+        "1206E132 0000201F",
+        "1206E148 0000201F",
+        "1206E15E 0000201F",
+        "1206E174 0000201F"
+      ]
+    },
+    {
+      "systemId": "nds",
+      "titlePattern": "heart ?gold|soul ?silver|하트 ?골드|소울 ?실버",
+      "region": "Korea",
+      "name": "야생 출현율 높음",
+      "format": "ACTION_REPLAY_DS",
+      "notes": "SELECT+→ 를 1초 정도 누르기.",
+      "code": [
+        "94000130 FFEB0000",
+        "B2112280 00000000",
+        "2000690D 000000FF",
+        "D2000000 00000000"
+      ]
+    },
+    {
+      "systemId": "nds",
+      "titlePattern": "heart ?gold|soul ?silver|하트 ?골드|소울 ?실버",
+      "region": "Korea",
+      "name": "야생 출현율 낮음",
+      "format": "ACTION_REPLAY_DS",
+      "notes": "SELECT+← 를 1초 정도 누르기.",
+      "code": [
+        "94000130 FFDB0000",
+        "B2112280 00000000",
+        "2000690D 00000001",
+        "D2000000 00000000"
+      ]
+    },
+    {
+      "systemId": "nds",
+      "titlePattern": "heart ?gold|soul ?silver|하트 ?골드|소울 ?실버",
+      "region": "Korea",
+      "name": "야생 출현율 보통 (복구)",
+      "format": "ACTION_REPLAY_DS",
+      "notes": "SELECT+↓ 를 1초 정도 누르기.",
+      "code": [
+        "94000130 FF7B0000",
+        "B2112280 00000000",
+        "2000690D 00000000",
+        "D2000000 00000000"
+      ]
+    },
+    {
+      "systemId": "nds",
+      "titlePattern": "heart ?gold|soul ?silver|하트 ?골드|소울 ?실버",
+      "region": "Korea",
+      "name": "모든 기술머신·비전머신",
+      "format": "ACTION_REPLAY_DS",
+      "notes": "게임 중 SELECT를 1초 정도 누르기.",
+      "code": [
+        "94000130 FFFB0000",
+        "B2112280 00000000",
+        "D5000000 00630148",
+        "C0000000 00000063",
+        "D6000000 000009B0",
+        "D4000000 00000001",
+        "D2000000 00000000"
+      ]
+    },
+    {
+      "systemId": "nds",
+      "titlePattern": "heart ?gold|soul ?silver|하트 ?골드|소울 ?실버",
+      "region": "Korea",
+      "name": "모든 도구 999개",
+      "format": "ACTION_REPLAY_DS",
+      "notes": "게임 중 SELECT를 1초 정도 누르기. 도구 주머니 전체.",
+      "code": [
+        "94000130 FFFB0000",
+        "B2112280 00000000",
+        "D5000000 03E70044",
+        "C0000000 0000002E",
+        "D6000000 00000654",
+        "D4000000 00000001",
+        "D2000000 00000000",
+        "94000130 FFFB0000",
+        "B2112280 00000000",
+        "00000708 03E70087",
+        "0000070C 03E70088",
+        "D2000000 00000000",
+        "94000130 FFFB0000",
+        "B2112280 00000000",
+        "D5000000 03E700D5",
+        "C0000000 00000071",
+        "D6000000 00000710",
+        "D4000000 00000001",
+        "D2000000 00000000"
+      ]
+    },
+    {
+      "systemId": "nds",
+      "titlePattern": "heart ?gold|soul ?silver|하트 ?골드|소울 ?실버",
+      "region": "Korea",
+      "name": "모든 포켓몬이 모든 기술머신 습득 가능",
+      "format": "ACTION_REPLAY_DS",
+      "notes": "호환 여부와 상관없이 기술머신 사용 가능.",
+      "code": [
+        "920723BA 0000D001",
+        "120723BA 000046C0",
+        "D2000000 00000000"
+      ]
+    },
+    {
+      "systemId": "nds",
+      "titlePattern": "heart ?gold|soul ?silver|하트 ?골드|소울 ?실버",
+      "region": "Korea",
+      "name": "비전기술 잊기 가능",
+      "format": "ACTION_REPLAY_DS",
+      "notes": "기술 삭제 시 비전기술도 잊을 수 있음.",
+      "code": [
+        "9207812C 00002001",
+        "1207812C 00002000",
+        "D2000000 00000000"
+      ]
+    },
+    {
+      "systemId": "nds",
+      "titlePattern": "heart ?gold|soul ?silver|하트 ?골드|소울 ?실버",
+      "region": "Korea",
+      "name": "전투 중 내 1번째 포켓몬 HP 999",
+      "format": "ACTION_REPLAY_DS",
+      "notes": "전투 중 항상 HP 999/999.",
+      "code": [
+        "B2112280 00000000",
+        "10049EA4 000003E7",
+        "10049EA8 000003E7",
+        "D2000000 00000000"
+      ]
+    },
+    {
+      "systemId": "nds",
+      "titlePattern": "heart ?gold|soul ?silver|하트 ?골드|소울 ?실버",
+      "region": "Korea",
+      "name": "전투 중 상대 1번째 포켓몬 HP 1",
+      "format": "ACTION_REPLAY_DS",
+      "notes": "R+↑ 를 1초 정도 누르기. 야생 포켓몬 포획에 편리.",
+      "code": [
+        "94000130 FEBF0000",
+        "B2112280 00000000",
+        "10049F64 00000001",
+        "D2000000 00000000"
+      ]
+    },
+    {
+      "systemId": "nds",
+      "titlePattern": "heart ?gold|soul ?silver|하트 ?골드|소울 ?실버",
+      "region": "Korea",
+      "name": "오박사에게 포켓몬 다시 받기",
+      "format": "ACTION_REPLAY_DS",
+      "notes": "L+R 을 누른 뒤 해당 장소에서 A. 이미 받은 포켓몬은 표시되지 않지만 받을 수 있음.",
+      "code": [
+        "94000130 FCFF0000",
+        "B2112280 00000000",
+        "20001056 00000001",
+        "D2000000 00000000"
+      ]
+    },
+    {
+      "systemId": "nds",
+      "titlePattern": "heart ?gold|soul ?silver|하트 ?골드|소울 ?실버",
       "region": "USA",
       "name": "Increase Text Speed",
       "format": "ACTION_REPLAY_DS",

@@ -65,10 +65,12 @@ whose region matches the title (or a Korean title for Korean presets) are listed
 
 Today it holds Pokémon HeartGold / SoulSilver codes for the Korean release (message speed, game speed,
 movement x2, screen transitions, EXP bar, instant turning, walk through walls, max money, all
-medicine, all Poké Balls, anti-freeze) and the US release (text speed, movement x2, max money, rare
-candy, walk through walls). They come from public cheat lists and are **not verified** by this
+medicine, all Poké Balls, all items, all TMs/HMs, EXP x2 / x4, guaranteed catch, wild 6 IV, wild
+encounter rate high/low/normal, learn any TM, forget HMs, in-battle HP, re-receive the starter,
+anti-freeze) and the US release (text speed, movement x2, max money, rare candy, walk through walls). They come from public cheat lists and are **not verified** by this
 project. The Korean "게임 고속화" code had a 9-digit value in its source and was corrected to a 16-bit
-value (`0000E000`).
+value (`0000E000`). The "wild encounter rate low" trigger in the source was a plain SELECT mask and was
+corrected to SELECT+Left (`FFDB0000`) to match its label.
 
 ## What changed
 
