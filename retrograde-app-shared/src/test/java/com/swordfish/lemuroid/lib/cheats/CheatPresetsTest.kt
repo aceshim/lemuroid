@@ -15,7 +15,7 @@ class CheatPresetsTest {
 
     @Test
     fun bundledCatalogLoadsFromResources() {
-        assertEquals(34, CheatPresets.bundled.size)
+        assertEquals(39, CheatPresets.bundled.size)
     }
 
     @Test

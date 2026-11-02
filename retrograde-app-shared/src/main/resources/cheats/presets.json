@@ -194,7 +194,7 @@
       "region": "Korea",
       "name": "전투 경험치 2배",
       "format": "ACTION_REPLAY_DS",
-      "notes": "전투 후 획득 경험치가 2배.",
+      "notes": "전투 후 획득 경험치가 2배. 경험치 배율 코드는 하나만 켜세요.",
       "code": [
         "9223F1EE 0000319C",
         "0223F1F0 60080040",
@@ -208,10 +208,80 @@
       "region": "Korea",
       "name": "전투 경험치 4배",
       "format": "ACTION_REPLAY_DS",
-      "notes": "전투 후 획득 경험치가 4배.",
+      "notes": "전투 후 획득 경험치가 4배. 경험치 배율 코드는 하나만 켜세요.",
       "code": [
         "9223F1EE 0000319C",
         "0223F1F0 60080080",
+        "0223F1F4 309C1C28",
+        "D0000000 00000000"
+      ]
+    },
+    {
+      "systemId": "nds",
+      "titlePattern": "heart ?gold|soul ?silver|하트 ?골드|소울 ?실버",
+      "region": "Korea",
+      "name": "전투 경험치 8배",
+      "format": "ACTION_REPLAY_DS",
+      "notes": "전투 후 획득 경험치가 8배. 경험치 배율 코드는 하나만 켜세요.",
+      "code": [
+        "9223F1EE 0000319C",
+        "0223F1F0 600800C0",
+        "0223F1F4 309C1C28",
+        "D0000000 00000000"
+      ]
+    },
+    {
+      "systemId": "nds",
+      "titlePattern": "heart ?gold|soul ?silver|하트 ?골드|소울 ?실버",
+      "region": "Korea",
+      "name": "전투 경험치 16배",
+      "format": "ACTION_REPLAY_DS",
+      "notes": "전투 후 획득 경험치가 16배. 경험치 배율 코드는 하나만 켜세요.",
+      "code": [
+        "9223F1EE 0000319C",
+        "0223F1F0 60080100",
+        "0223F1F4 309C1C28",
+        "D0000000 00000000"
+      ]
+    },
+    {
+      "systemId": "nds",
+      "titlePattern": "heart ?gold|soul ?silver|하트 ?골드|소울 ?실버",
+      "region": "Korea",
+      "name": "전투 경험치 32배",
+      "format": "ACTION_REPLAY_DS",
+      "notes": "전투 후 획득 경험치가 32배. 경험치 배율 코드는 하나만 켜세요.",
+      "code": [
+        "9223F1EE 0000319C",
+        "0223F1F0 60080140",
+        "0223F1F4 309C1C28",
+        "D0000000 00000000"
+      ]
+    },
+    {
+      "systemId": "nds",
+      "titlePattern": "heart ?gold|soul ?silver|하트 ?골드|소울 ?실버",
+      "region": "Korea",
+      "name": "전투 경험치 64배",
+      "format": "ACTION_REPLAY_DS",
+      "notes": "전투 후 획득 경험치가 64배. 경험치 배율 코드는 하나만 켜세요.",
+      "code": [
+        "9223F1EE 0000319C",
+        "0223F1F0 60080180",
+        "0223F1F4 309C1C28",
+        "D0000000 00000000"
+      ]
+    },
+    {
+      "systemId": "nds",
+      "titlePattern": "heart ?gold|soul ?silver|하트 ?골드|소울 ?실버",
+      "region": "Korea",
+      "name": "전투 경험치 128배",
+      "format": "ACTION_REPLAY_DS",
+      "notes": "전투 후 획득 경험치가 128배. 경험치 배율 코드는 하나만 켜세요.",
+      "code": [
+        "9223F1EE 0000319C",
+        "0223F1F0 600801C0",
         "0223F1F4 309C1C28",
         "D0000000 00000000"
       ]
