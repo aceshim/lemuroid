@@ -146,6 +146,7 @@
         <item quantity="other">치트 %1$d개 건너뜀: 잘못된 코드</item>
     </plurals>
     <string name="game_toast_cheats_disabled">치트 해제됨</string>
+    <string name="game_toast_cheats_sending">치트가 코어에 전달되고 있습니다. 효과가 없으면 코드가 이 롬과 맞지 않는 것입니다.</string>
     <string name="game_toast_cheats_error">에뮬레이터 코어가 치트를 거부했습니다</string>
     <string name="empty_view_default">항목 없음</string>
     <string name="core_settings_title">코어 설정</string>

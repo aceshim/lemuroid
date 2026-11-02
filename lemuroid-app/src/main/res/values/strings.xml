@@ -179,6 +179,7 @@
         <item quantity="other">%1$d cheats skipped: invalid code</item>
     </plurals>
     <string name="game_toast_cheats_disabled">Cheats disabled</string>
+    <string name="game_toast_cheats_sending">Cheats are reaching the core. No effect means the code does not match this ROM.</string>
     <string name="game_toast_cheats_error">The emulator core rejected the cheats</string>
 
     <string name="empty_view_default">No Items</string>

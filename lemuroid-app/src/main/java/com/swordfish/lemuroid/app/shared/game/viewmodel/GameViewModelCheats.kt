@@ -148,6 +148,8 @@ class GameViewModelCheats(
         frameLoopJob =
             scope.launch {
                 var frame = 0
+                var sent = 0
+                var failed = false
                 view.getGLRetroEvents()
                     .filterIsInstance<GLRetroView.GLRetroEvents.FrameRendered>()
                     .collect {
@@ -157,8 +159,17 @@ class GameViewModelCheats(
                                 codes.forEachIndexed { index, code ->
                                     LibretroDroid.setCheat(index, true, code)
                                 }
+                                sent++
+                                // One-time confirmation that the cheats really reach the core.
+                                if (sent == FRAME_LOOP_CONFIRMATION_SENDS) {
+                                    sideEffects.showToast(appContext.getString(R.string.game_toast_cheats_sending))
+                                }
                             } catch (e: Throwable) {
                                 Timber.e(e, "The core rejected the cheats")
+                                if (!failed) {
+                                    failed = true
+                                    sideEffects.showToast(appContext.getString(R.string.game_toast_cheats_error))
+                                }
                             }
                         }
                     }
@@ -185,5 +196,6 @@ class GameViewModelCheats(
 
     companion object {
         private const val FRAME_LOOP_INTERVAL = 4
+        private const val FRAME_LOOP_CONFIRMATION_SENDS = 30
     }
 }
