@@ -171,5 +171,6 @@ Unit tests: `./gradlew :retrograde-app-shared:testDebugUnitTest`.
   serializer 7, presets 6).
 - `:lemuroid-app:assembleFreeBundleDebug`: builds; the debug APK bundles all cores and installs as
   `com.swordfish.lemuroid.debug` next to the stock app.
-- Not yet done: on-device checks (effect in game, state load, restart, save files). Run them on a
-  phone with a homebrew or your own ROM before relying on a code.
+- On device: confirmed on a phone with Pokémon HeartGold (Korean release) on melonDS DS. Adding a
+  preset from the list, closing the menu and pressing the trigger button applied the cheat in game.
+- Not yet checked on device: GBA (mGBA), state load and restart interactions, save file integrity.
