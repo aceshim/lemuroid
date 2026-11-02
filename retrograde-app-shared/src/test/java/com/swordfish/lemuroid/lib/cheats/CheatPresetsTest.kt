@@ -15,7 +15,7 @@ class CheatPresetsTest {
 
     @Test
     fun bundledCatalogLoadsFromResources() {
-        assertEquals(31, CheatPresets.bundled.size)
+        assertEquals(32, CheatPresets.bundled.size)
     }
 
     @Test
@@ -51,7 +51,7 @@ class CheatPresetsTest {
     fun koreanTitlesPutKoreanPresetsFirstAndUsTitlesPutUsPresetsFirst() {
         val korean = forGame("nds", "포켓몬스터 하트골드", "hg_kor.nds")
         assertEquals("Korea", korean.first().region)
-        assertTrue(korean.any { it.name == "게임 고속화" })
+        assertTrue(korean.any { it.name == "게임 배속 v2 (Delta 공유 코드)" })
         assertTrue(korean.any { it.name == "흑화 방지 (하트골드)" })
         assertTrue(korean.none { it.name == "흑화 방지 (소울실버)" })
 

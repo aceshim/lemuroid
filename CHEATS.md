@@ -70,7 +70,8 @@ encounter rate high/low/normal, learn any TM, forget HMs, in-battle HP, re-recei
 anti-freeze) and the US release (text speed, movement x2, max money, rare candy, walk through walls). They come from public cheat lists and are **not verified** by this
 project. The Korean "게임 고속화" code had a 9-digit value in its source and was corrected to a 16-bit
 value (`0000E000`). The "wild encounter rate low" trigger in the source was a plain SELECT mask and was
-corrected to SELECT+Left (`FFDB0000`) to match its label.
+corrected to SELECT+Left (`FFDB0000`) to match its label. "게임 배속" exists in two variants (v1 from the
+community list, v2 shared by a Delta user); enable only one of them.
 
 ## What changed
 

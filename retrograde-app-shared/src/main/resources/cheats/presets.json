@@ -22,12 +22,26 @@
       "systemId": "nds",
       "titlePattern": "heart ?gold|soul ?silver|하트 ?골드|소울 ?실버",
       "region": "Korea",
-      "name": "게임 고속화",
+      "name": "게임 배속 v1 (카페 버전)",
       "format": "ACTION_REPLAY_DS",
-      "notes": "게임 내부 처리 속도 상승. 원문 2번째 값에 오타(9자리)가 있어 0000E000으로 보정함.",
+      "notes": "게임 내부 처리 속도 상승. 원문 2번째 값에 오타(9자리)가 있어 0000E000으로 보정함. v2와 동시에 켜지 마세요.",
       "code": [
         "12000E02 0000E000",
         "120543DC 00004770"
+      ]
+    },
+    {
+      "systemId": "nds",
+      "titlePattern": "heart ?gold|soul ?silver|하트 ?골드|소울 ?실버",
+      "region": "Korea",
+      "name": "게임 배속 v2 (Delta 공유 코드)",
+      "format": "ACTION_REPLAY_DS",
+      "notes": "조건 검사가 포함된 변형. v1보다 먼저 시도하세요. v1과 동시에 켜지 마세요.",
+      "code": [
+        "12000DFE 0000E000",
+        "521E75BC F66C217F",
+        "121E75BC 0000E005",
+        "D2000000 00000000"
       ]
     },
     {
